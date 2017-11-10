@@ -27,7 +27,7 @@ void closing();
 //Carrega uma imagem
 SDL_Surface* loadPNG( char *path ); // Tem Transparencia
 
-SDL_Surface* loadSurface( char *path );
+SDL_Surface* loadSurface( char *path ); //N tem transparencia
 
 Sprite createSprite(int x, int y, SDL_Surface* loaded);
 
@@ -38,5 +38,8 @@ int collided(Sprite a, Sprite b);
 int collided_circle(Sprite circle1, Sprite circle2);
 
 int theGame(int tela);
+
+Sprite criaMatriz(int l, int a);
+void desenhaMatriz(Sprite v);
 
 #endif

@@ -11,7 +11,7 @@ BINARIES=StrangerShooter
 all: $(BINARIES)
 
 StrangerShooter: main.o includes/funcoes.o includes/globais.o includes/telas.o
-	$(CC) -o StrangerShooter main.o includes/funcoes.o includes/globais.o includes/telas.o $(CFLAGS) $(SFLAGS) $(LFLAGS) $(IFLAGS) $(IMAGE_FLAGS) $(MIXER_FLAGS)
+	$(CC) -o main main.o includes/funcoes.o includes/globais.o includes/telas.o $(CFLAGS) $(SFLAGS) $(LFLAGS) $(IFLAGS) $(IMAGE_FLAGS) $(MIXER_FLAGS)
 
 main.o: main.c
 	$(CC) -c main.c $(CFLAGS)

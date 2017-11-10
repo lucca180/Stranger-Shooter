@@ -18,24 +18,36 @@
 #include "funcoes.h"
 #include "telas.h"
 
+
+void particlesDrop(Sprite *p){
+	p->y += 1;
+	if ((p->y + p->height > 0) && (p->y < 0)){
+		draw(*p);
+	}
+	
+	if (p->y >= -5){
+		p->y = SCREEN_HEIGHT-p->height;
+	}
+	
+}
+
 void menuPrincipal (void){
 	static int mLoad = 0;
 	static Sprite bg, logo, filter;
 	
 	if (!mLoad){
 
-	
 		Mix_Music* music;
 		SDL_Surface* strangerbg = loadSurface("img/bg.png");
-		SDL_Surface* logoimg = loadPNG("img/logo.png");
+		SDL_Surface* logoimg = loadPNG("img/logo2.png");
 		SDL_Surface* filterimg = loadPNG("img/filter2.png");
 		
 		//SDL_SetSurfaceBlendMode(filterimg, SDL_BLENDMODE_ADD);
 		//SDL_SetColorKey( logoimg, SDL_TRUE, SDL_MapRGB( filterimg->format, 0, 0, 0 ));
 		
 		bg = createSprite(0, 0, strangerbg);
-		logo = createSprite((SCREEN_WIDTH-logoimg->w)/2,0, logoimg);
-		filter = createSprite(0,0, filterimg);
+		filter = createSprite(0,(SCREEN_HEIGHT-filterimg->h), filterimg);
+		logo = createSprite((SCREEN_WIDTH-logoimg->w)/2,10, logoimg);
 		
 		Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
 		Mix_AllocateChannels(16);
@@ -45,11 +57,11 @@ void menuPrincipal (void){
 			printf("Mus: SDL error=%s\n", SDL_GetError());
 		}
 		mLoad = 1;
-		//Mix_PlayMusic(music, -1);
+		Mix_PlayMusic(music, -1);
 	}
 	
 	draw(bg);
-	draw(filter);
-	//draw(logo);
+	particlesDrop(&filter);
+	draw(logo);
 	
 }

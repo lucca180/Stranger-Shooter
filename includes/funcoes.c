@@ -10,6 +10,8 @@
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
+
 #include "globais.h"
 #include "defs.h"
 #include "funcoes.h"
@@ -70,6 +72,36 @@ int collided_circle(Sprite circle1, Sprite circle2){
 	
 	return false;
 }
+
+/* Cria e preenche matriz
+
+Sprite criaMatriz (int l, int a){
+	Sprite balls[0][10];
+	int i;
+	
+	SDL_Surface* black = loadPNG("img/ball.png");
+	SDL_Surface* red = loadPNG("img/ball2.png");
+	SDL_Surface* sprite;
+	
+	for(i = 0; i < a; i++){
+		if (rand()%2) sprite = black;
+		else sprite = red;
+			
+		balls[0][i] = createSprite(i*sprite->w, 0, sprite);
+		
+	}
+	return balls;
+}
+
+void desenhaMatriz(Sprite v){
+	int i;
+	
+	for(i = 0; i < 10; i++){
+		draw(v[0][i]);
+	}
+
+}
+*/
 
 // The Game -> Função Principal ( e sim, vc acaba de perder o Jogo)
 

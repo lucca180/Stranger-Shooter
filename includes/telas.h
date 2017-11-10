@@ -20,4 +20,5 @@
 
 void menuPrincipal (void);
 
+void particlesDrop(Sprite *p);
 #endif

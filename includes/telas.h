@@ -21,4 +21,5 @@
 void menuPrincipal (void);
 
 void particlesDrop(Sprite *p);
+void upsideDown(Sprite *p, Sprite *g);
 #endif

@@ -12,8 +12,10 @@
 const int SCREEN_WIDTH = 1200;
 const int SCREEN_HEIGHT = 700;
 
-const int false = 0;
 const int true = 1;
+const int false = 0;
+
+int quit = 0;
 
 SDL_Window* gWindow = NULL;
     

@@ -8,6 +8,8 @@
 #ifndef DEFS_H
 #define DEFS_H
 
+typedef int bool;
+
 typedef struct _SPRITE{
 	int x;
 	int y;

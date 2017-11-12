@@ -17,6 +17,8 @@ extern const int SCREEN_HEIGHT;
 extern const int false;
 extern const int true;
 
+extern int quit;
+
 extern SDL_Window* gWindow;
 extern SDL_Surface* gScreenSurface;
 

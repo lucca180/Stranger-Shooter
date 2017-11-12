@@ -31,37 +31,80 @@ void particlesDrop(Sprite *p){
 	
 }
 
+void upsideDown(Sprite *p, Sprite *g){
+	if (p->y + p->height > 0) p->y -= 1;
+	else{
+		if (g->y > 0) g->y -= 1;}
+}
+
 void menuPrincipal (void){
 	static int mLoad = 0;
-	static Sprite bg, logo, filter;
+	static int upside = 0;
+	static int upsideLoad = 0;
+	
+	static Sprite fakebg, bg, bg_ultra, logo, filter, btnPlay;
+	
+	static Mix_Music* music1;
+	static Mix_Music* music2;
+	
+	// Eventos da Tela
+	SDL_Event e;
+
+	while( SDL_PollEvent( &e ) != 0 ) {
+		if( e.type == SDL_QUIT ) {
+			quit = true;
+		}
+		
+		if (buttonClick(fakebg, &e)) upside = 1;
+	}
+	
+	// Resto
 	
 	if (!mLoad){
-
-		Mix_Music* music;
+		
 		SDL_Surface* strangerbg = loadSurface("img/bg.png");
+		SDL_Surface* fakebgimg = loadSurface("img/fake/bg.png");
+		SDL_Surface* bgUltraimg = loadSurface("img/bg_ultra.png");
 		SDL_Surface* logoimg = loadPNG("img/logo2.png");
 		SDL_Surface* filterimg = loadPNG("img/filter2.png");
+		SDL_Surface* btnPlayimg = loadPNG("img/btn_play.png");
 		
-		//SDL_SetSurfaceBlendMode(filterimg, SDL_BLENDMODE_ADD);
-		//SDL_SetColorKey( logoimg, SDL_TRUE, SDL_MapRGB( filterimg->format, 0, 0, 0 ));
-		
-		bg = createSprite(0, 0, strangerbg);
+		bg = createSprite(0, strangerbg->h, strangerbg);
+		fakebg = createSprite(0, 0, fakebgimg);
 		filter = createSprite(0,(SCREEN_HEIGHT-filterimg->h), filterimg);
 		logo = createSprite((SCREEN_WIDTH-logoimg->w)/2,10, logoimg);
+		btnPlay = createSprite(SCREEN_WIDTH/2,SCREEN_HEIGHT/2, btnPlayimg);
+		bg_ultra = createSprite(0, 0, bgUltraimg);
 		
 		Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 4096);
 		Mix_AllocateChannels(16);
 		
-		music = Mix_LoadMUS("stmusic.mp3");
-		if (!music) {
+		music1 = Mix_LoadMUS("musicFake.mp3");
+		music2 = Mix_LoadMUS("stmusic.mp3");
+		if (!music1 || !music2) {
 			printf("Mus: SDL error=%s\n", SDL_GetError());
 		}
 		mLoad = 1;
-		Mix_PlayMusic(music, -1);
+		Mix_PlayMusic(music1, -1);
 	}
 	
-	draw(bg);
-	particlesDrop(&filter);
-	draw(logo);
+	draw(bg_ultra);
+	draw(fakebg);
+	
+	if(upside){
+		if(!upsideLoad){
+		Mix_PauseMusic();
+		Mix_FreeMusic(music1);
+		Mix_PlayMusic(music2, 0);
+		upsideLoad = 1;}
+		
+		upsideDown(&fakebg, &bg);
+		draw(bg);
+		if(bg.y <= 0){
+			draw(btnPlay);
+			particlesDrop(&filter);
+			draw(logo);
+		}
+	}
 	
 }

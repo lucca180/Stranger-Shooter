@@ -31,7 +31,7 @@ SDL_Surface* loadSurface( char *path ); //N tem transparencia
 
 Sprite createSprite(int x, int y, SDL_Surface* loaded);
 
-void draw(Sprite p);
+int draw(Sprite p);
 
 int collided(Sprite a, Sprite b);
 
@@ -39,7 +39,10 @@ int collided_circle(Sprite circle1, Sprite circle2);
 
 int theGame(int tela);
 
-Sprite criaMatriz(int l, int a);
-void desenhaMatriz(Sprite v);
+int buttonClick (Sprite p, SDL_Event* e);
+
+//Sprite criaMatriz(int l, int a);
+
+//void desenhaMatriz(Sprite v);
 
 #endif

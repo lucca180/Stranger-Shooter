@@ -32,16 +32,19 @@ Sprite createSprite(int x, int y, SDL_Surface* loaded){
 	return p;
 	}
 
-void draw(Sprite p){
-	
-	SDL_Rect dstRect;
-	
-	dstRect.x = p.x;
-	dstRect.y = p.y;
-	
-	SDL_BlitSurface( p.image, NULL, gScreenSurface, &dstRect );
+int draw(Sprite p){
+	if((p.y + p.height > 0) && (p.y < SCREEN_HEIGHT)){
+		SDL_Rect dstRect;
+		
+		dstRect.x = p.x;
+		dstRect.y = p.y;
+		
+		SDL_BlitSurface( p.image, NULL, gScreenSurface, &dstRect );	
+		
+		return true;
 	}
-
+	return false;
+}
 
 
 // Collision Functions
@@ -70,6 +73,59 @@ int collided_circle(Sprite circle1, Sprite circle2){
 		return true;
 	}
 	
+	return false;
+}
+
+// Buttons Functions
+
+int buttonClick (Sprite p, SDL_Event* e){
+	if( e->type == SDL_MOUSEMOTION || e->type == SDL_BUTTON_LEFT || e->type == SDL_MOUSEBUTTONUP ) {
+		//Get mouse position
+		int x, y;
+		SDL_GetMouseState( &x, &y );
+
+		//Check if mouse is in button
+		int inside = true;
+
+		//Mouse is left of the button
+		if( x < p.x ) {
+			inside = false;
+		}
+		//Mouse is right of the button
+		else if( x > p.x + p.width ) {
+			inside = false;
+		}
+		//Mouse above the button
+		else if( y < p.y ) {
+			inside = false;
+		}
+		//Mouse below the button
+		else if( y > p.y + p.height ) {
+			inside = false;
+		}
+
+		//Mouse is outside button
+		if( !inside ) {
+			//botao->mCurrentSprite = BUTTON_SPRITE_MOUSE_OUT;
+		}
+		//Mouse is inside button
+		else {
+			//Set mouse over sprite
+			switch( e->type ) {
+				//case SDL_MOUSEMOTION:
+				//botao->mCurrentSprite = BUTTON_SPRITE_MOUSE_OVER_MOTION;
+				//break;
+			
+				//case SDL_BUTTON_LEFT:
+				//botao->mCurrentSprite = BUTTON_SPRITE_MOUSE_DOWN;
+				//break;
+				
+				case SDL_MOUSEBUTTONUP:
+				return true;
+				break;
+			}
+		}
+	}
 	return false;
 }
 

@@ -6,6 +6,7 @@
  */
 
 #include "globais.h"
+#include <stdlib.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
@@ -22,12 +23,13 @@ SDL_Window* gWindow = NULL;
 SDL_Surface* gScreenSurface = NULL;
 
 
+int moveBall = 0;
 
 /* Telas
 	
 	- Tela 1 => Menu Principal
- 
+	- Tela 2 => Tela de Jogo
  */
  
-int gTela = 1;
+int gTela = 2;
 

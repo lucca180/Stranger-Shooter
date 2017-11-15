@@ -1,4 +1,5 @@
 /*
+ * 
  * main.c
  * 
  * 2017 Lucca, Julia e Paulo
@@ -13,6 +14,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include <stdlib.h>
 
 #include "includes/defs.h"
 #include "includes/globais.h"
@@ -35,14 +37,12 @@ int main( int argc, char* args[] ) {
             //While application is running
             while( !quit ) {
               
-              
-              
                 SDL_FillRect( gScreenSurface, NULL, SDL_MapRGB( gScreenSurface->format, 0, 0, 0) );
 				
 				theGame(gTela);
                 //Update A surface
                 SDL_UpdateWindowSurface( gWindow );
-                SDL_Delay(10);
+               // SDL_Delay(5);
             }
         }
 

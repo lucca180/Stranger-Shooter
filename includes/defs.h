@@ -11,14 +11,27 @@
 typedef int bool;
 
 typedef struct _SPRITE{
-	int x;
-	int y;
+	float x;
+	float y;
+	
+	int iShow;
+	
 	int height;
 	int width;
 	
+	float stepX;
+	float stepY;
+	
 	SDL_Surface* image;
 	
+	
 } Sprite;
+
+typedef struct _MATRIX{
+    int width;
+    int height;
+    Sprite* ptr;
+} Matrix;
 
 #endif
 

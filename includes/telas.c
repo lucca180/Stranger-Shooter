@@ -18,6 +18,8 @@
 #include "funcoes.h"
 #include "telas.h"
 
+#define TAM_L 15
+#define TAM_C 0
 
 void particlesDrop(Sprite *p){
 	p->y += 1;
@@ -30,6 +32,8 @@ void particlesDrop(Sprite *p){
 	}
 	
 }
+
+// -------- Menu Principal -------- //
 
 void upsideDown(Sprite *p, Sprite *g){
 	if (p->y + p->height > 0) p->y -= 1;
@@ -107,4 +111,58 @@ void menuPrincipal (void){
 		}
 	}
 	
+}
+
+// -------- Tela de Jogo -------- //
+
+void gameLoop (void){
+	static int mLoad = 0;
+	static Sprite bg, filter, ball;
+	static Matrix bolas;
+	
+	// Eventos da Tela
+	SDL_Event e;
+
+	 while( SDL_PollEvent( &e ) != 0 ) {
+            switch (e.type) {
+                case SDL_QUIT:
+                    quit = true;
+                    break;
+                case SDL_KEYDOWN:
+                    if (e.key.keysym.sym == SDLK_ESCAPE) {
+                        quit = true;
+                    }
+                    break;
+				case SDL_MOUSEBUTTONDOWN: /*JUBS OBS: tudo float ou vaiu dar merda*/
+					ballTraject(&ball, &e);
+					break;
+            }
+        }
+        
+	if (!mLoad){
+		SDL_Surface* strangerbg = loadSurface("img/bg.png");
+		SDL_Surface* ballimg[4];
+		ballimg[0] = loadPNG("img/ball_red.png");
+		ballimg[1] = loadPNG("img/ball_blue.png");
+		ballimg[2] = loadPNG("img/ball_pink.png");
+		ballimg[3] = loadPNG("img/ball_green.png");
+		SDL_Surface* filterimg = loadPNG("img/filter2.png");
+		
+		bg = createSprite(0, 0, strangerbg);
+		ball = createSprite((SCREEN_WIDTH - ballimg[0]->w)/2, (SCREEN_HEIGHT - ballimg[0]->h), ballimg[0]);
+		filter = createSprite(0,(SCREEN_HEIGHT-filterimg->h), filterimg);
+		
+		bolas = criaMatriz(24,1,ballimg);
+		
+		mLoad = true;
+	}
+	
+	draw(bg);
+	desenhaMatriz(bolas);
+	draw(ball);
+	particlesDrop(&filter);
+	
+	colideCheck(bolas, &ball);
+	
+	moveBola(&ball); 
 }

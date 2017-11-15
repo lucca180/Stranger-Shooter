@@ -10,6 +10,7 @@
 #include <SDL2/SDL_image.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <time.h>
 
 #include "globais.h"
@@ -17,7 +18,7 @@
 #include "funcoes.h"
 #include "telas.h"
 
-// Sprites
+// ----- Sprites ------- //
 
 Sprite createSprite(int x, int y, SDL_Surface* loaded){
 	Sprite p;
@@ -25,29 +26,33 @@ Sprite createSprite(int x, int y, SDL_Surface* loaded){
 	p.x = x;
 	p.y = y;
 	
+	p.iShow = 1;
+	
 	p.image = loaded;
 	p.width = loaded->w;
 	p.height = loaded->h;
 	
 	return p;
-	}
+}
 
 int draw(Sprite p){
-	if((p.y + p.height > 0) && (p.y < SCREEN_HEIGHT)){
-		SDL_Rect dstRect;
-		
-		dstRect.x = p.x;
-		dstRect.y = p.y;
-		
-		SDL_BlitSurface( p.image, NULL, gScreenSurface, &dstRect );	
-		
-		return true;
+	if(p.iShow){
+		if((p.y + p.height > 0) && (p.y < SCREEN_HEIGHT)){
+			SDL_Rect dstRect;
+			
+			dstRect.x = p.x;
+			dstRect.y = p.y;
+			
+			SDL_BlitSurface( p.image, NULL, gScreenSurface, &dstRect );	
+			
+			return true;
+		}
 	}
 	return false;
 }
 
 
-// Collision Functions
+// -------- Collision Functions ----------- //
 
 int collided(Sprite rect1, Sprite rect2){
 	if (rect1.x < rect2.x + rect2.width &&
@@ -76,7 +81,27 @@ int collided_circle(Sprite circle1, Sprite circle2){
 	return false;
 }
 
-// Buttons Functions
+int colideCheck(Matrix m, Sprite* ball){
+	int r, c;
+	
+	if(moveBall){
+		for (r=0; r < m.height; ++r){ 
+			Sprite* row = matrix_row(&m, r);
+			for (c=0; c < m.width; ++c)
+				if(collided_circle(row[c], *ball)){
+					moveBall = false;
+					if(row[c].image == ball->image){ 
+						ball->iShow = 0; 
+						row[c].iShow = 0;
+					}
+					return true;
+				}
+		}
+	}
+    return false;
+}
+
+// ------------ Buttons Functions ----------------- //
 
 int buttonClick (Sprite p, SDL_Event* e){
 	if( e->type == SDL_MOUSEMOTION || e->type == SDL_BUTTON_LEFT || e->type == SDL_MOUSEBUTTONUP ) {
@@ -129,49 +154,110 @@ int buttonClick (Sprite p, SDL_Event* e){
 	return false;
 }
 
-/* Cria e preenche matriz
+// -------- Balls Functions -------- //
 
-Sprite criaMatriz (int l, int a){
-	Sprite balls[0][10];
-	int i;
+int ballTraject (Sprite *ball, SDL_Event* e){
+	int Mouse_x, Mouse_y;
+	float Mouse_hip;
 	
-	SDL_Surface* black = loadPNG("img/ball.png");
-	SDL_Surface* red = loadPNG("img/ball2.png");
-	SDL_Surface* sprite;
-	
-	for(i = 0; i < a; i++){
-		if (rand()%2) sprite = black;
-		else sprite = red;
+	if (!moveBall) {
+		if(e->button.button == SDL_BUTTON_LEFT){
+			moveBall = true;	
+			SDL_GetMouseState (&Mouse_x, &Mouse_y);
+			Mouse_x = (Mouse_x - SCREEN_WIDTH/2);
+			Mouse_y = (SCREEN_HEIGHT - ball->height/2 - Mouse_y);
+			if (Mouse_y<=30) {
+				moveBall = false;
+			}
+			Mouse_hip = sqrt(Mouse_x*Mouse_x + Mouse_y*Mouse_y);
 			
-		balls[0][i] = createSprite(i*sprite->w, 0, sprite);
+			ball->stepX = (Mouse_x/Mouse_hip)*10;
+			ball->stepY = -(Mouse_y/Mouse_hip)*10;
+		}
+	}
+	return 0;
+}
+
+void moveBola(Sprite *p) {
+	if(moveBall && (p->y >= 0)){
+		p->x += p->stepX;
+		p->y += p->stepY;
 		
+		if ( (p->x + p->width > SCREEN_WIDTH) ||
+			 (p->x < 0) ) {
+			p->stepX = -p->stepX;
+			p->x += p->stepX; 
+		}
+		if ( (p->y + p->height > SCREEN_HEIGHT)) {
+			p->stepY = -p->stepY;
+			p->y += p->stepY;
+		}
+		
+		else if (p->y <= 0) moveBall = false;
 	}
-	return balls;
 }
+// ----------- Desespero de Matriz ------------ // 
 
-void desenhaMatriz(Sprite v){
-	int i;
+	// i Was Truly Desperate https://stackoverflow.com/a/29982192
 	
-	for(i = 0; i < 10; i++){
-		draw(v[0][i]);
-	}
-
+Matrix matrix_create(int width, int height){
+    Matrix new_matrix;
+    new_matrix.width = width;
+    new_matrix.height = height;
+    new_matrix.ptr = malloc(width * height * sizeof(Sprite));
+    return new_matrix;
 }
-*/
 
-// The Game -> Função Principal ( e sim, vc acaba de perder o Jogo)
+void matrix_destroy(Matrix* m){
+    free(m->ptr);
+}
+
+Sprite* matrix_row(Matrix* m, int row){
+    return m->ptr + row * m->width;
+}
+	// Fim do desespero
+	
+Matrix criaMatriz (int i, int j, SDL_Surface* img[4]){
+	int c, r, x;
+	Matrix m = matrix_create(i, j);
+	
+	for (r=0; r <= m.height-1; ++r){
+        Sprite* row = matrix_row(&m, r);
+   
+        for (c=0; c < m.width; ++c){
+            x = rand() % 4;
+            row[c] = createSprite(img[x]->w*c,img[x]->h*r,img[x]);
+		}
+    }
+	return m;
+}
+
+void desenhaMatriz(Matrix m){
+	int r, c;
+
+	for (r=0; r < m.height; ++r){ 
+        Sprite* row = matrix_row(&m, r);
+        for (c=0; c < m.width; ++c)
+            draw(row[c]);
+    }
+    
+}
+
+
+// -- The Game -> Funcao Principal ( e sim, vc acaba de perder o Jogo ) -- //
 
 int theGame (int tela){
 	if(tela == 1) menuPrincipal();
+	if(tela == 2) gameLoop();
 	else {
 		puts("Código de Tela Inválido");
 		return 1;}
 	
 	return 0;
-	}
+}
 
 
-// FUNÇÕES DO SDL -> FAVOR NÃO ALTERAR 
+// -------- FUNCOES DO SDL -> FAVOR NAO ALTERAR ------------ //
 
 int init() {
     //flag de inicializacao

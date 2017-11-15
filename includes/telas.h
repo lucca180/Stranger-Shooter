@@ -13,6 +13,7 @@
 #include <SDL2/SDL_mixer.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "globais.h"
 #include "defs.h"
@@ -22,4 +23,7 @@ void menuPrincipal (void);
 
 void particlesDrop(Sprite *p);
 void upsideDown(Sprite *p, Sprite *g);
+
+
+void gameLoop (void);
 #endif

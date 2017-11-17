@@ -2,7 +2,7 @@
  * 
  * main.c
  * 
- * 2017 Lucca, Julia e Paulo
+ * 2017 - @Lucca Ricardo (117224925), Júlia Lima(117220751), Paulo Renato(117207703)
  * 
  * 
  */

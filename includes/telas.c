@@ -18,9 +18,6 @@
 #include "funcoes.h"
 #include "telas.h"
 
-#define TAM_L 15
-#define TAM_C 0
-
 void particlesDrop(Sprite *p){
 	p->y += 1;
 	if ((p->y + p->height > 0) && (p->y < 0)){

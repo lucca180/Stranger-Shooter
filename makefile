@@ -6,7 +6,7 @@ MIXER_FLAGS=-lSDL2_mixer
 SFLAGS=-lSDL2
 SOURCES=main.c funcoes.c globais.c telas.c
 OBJECTS=main.o funcoes.o globais.o telas.o
-BINARIES=StrangerShooter
+BINARIES=main
 
 all: $(BINARIES)
 

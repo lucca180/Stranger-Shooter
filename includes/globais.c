@@ -31,5 +31,5 @@ int moveBall = 0;
 	- Tela 2 => Tela de Jogo
  */
  
-int gTela = 2;
+int gTela = 1;
 

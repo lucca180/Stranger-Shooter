@@ -42,7 +42,7 @@ int main( int argc, char* args[] ) {
 				theGame(gTela);
                 //Update A surface
                 SDL_UpdateWindowSurface( gWindow );
-               // SDL_Delay(5);
+
             }
         }
 

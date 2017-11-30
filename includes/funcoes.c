@@ -221,7 +221,6 @@ Matrix criaMatriz (int i, int j, SDL_Surface* img[4]){
 	int c, r, x;
 	Matrix m = matrix_create(i, j);
 	srand( (unsigned)time(NULL) );
-	printf("%d\n", rand());
 	for (r=0; r <= m.height-1; ++r){
         Sprite* row = matrix_row(&m, r);
    
@@ -249,7 +248,7 @@ void desenhaMatriz(Matrix m){
 
 int theGame (int tela){
 	if(tela == 1) menuPrincipal();
-	if(tela == 2) gameLoop();
+	else if(tela == 2) gameLoop();
 	else {
 		puts("Código de Tela Inválido");
 		return 1;}
